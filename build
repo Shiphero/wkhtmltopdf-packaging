@@ -23,7 +23,10 @@ def message(msg):
     sys.stdout.write(msg+'\n')
     sys.stdout.flush()
 
-def shell(cmd, cwd=None):
+def shell(cmd, cwd=None, print=False):
+    if print:
+        message(cmd)
+
     ret = subprocess.call(cmd, shell=True, cwd=cwd)
     if ret:
         message('%s\ncommand failed: exit code %d' % (cmd, ret))
@@ -47,7 +50,7 @@ def docker_images(config, targets, force):
             if output('docker version --format "{{.Server.Experimental}}"') != 'true':
                 message('Could not detect experimental: true in docker daemon, aborting.')
                 sys.exit(1)
-        shell('docker pull --platform %s %s' % (platform or 'linux/amd64', image))
+        shell('docker pull --platform %s %s' % (platform or 'linux/amd64', image), print=True)
 
     started_qemu = None
     for name in targets:
@@ -70,7 +73,8 @@ def docker_images(config, targets, force):
         if force or image not in images:
             if 'from' in params.get('args', {}):
                 pull(params['args']['from'], params.get('platform') or 'linux/amd64')
-            shell('docker build -f %s %s -t %s docker/' % (params['source'], args, image))
+            
+            shell('docker build --platform %s -f %s %s -t %s docker/' % (params.get('platform') or 'linux/amd64', params['source'], args, image), print=True)
 
 def get_version(src_dir, iteration):
     rel_ver = open(os.path.join(src_dir, 'VERSION'), 'r').read().strip()
