@@ -41,7 +41,7 @@ jobs:
           # ref: ${{ github.event.inputs.wkhtmltopdf_ref }}
           ref: 0.12.2.1
       - name: build
-        run: cd packaging && python3 ./build --use-qemu linux/amd64 package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
+        run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
       - uses: softprops/action-gh-release@v0.1.14
         with:
           # name: ${{ github.event.inputs.packaging_release }}
