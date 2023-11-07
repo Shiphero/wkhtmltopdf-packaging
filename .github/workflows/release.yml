@@ -42,11 +42,7 @@ jobs:
           ref: 0.12.2.1
       - name: patches
         run: >
-          ls -la &&
-          cat -n wkhtmltopdf/qt/src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h &&
-          cd wkhtmltopdf/qt &&
-          ls -la &&
-          cat ../../packaging/patches/build_arm64.patch &&
+          ls -la ../../packaging/patches &&
           git apply ../../packaging/patches/build_arm64.patch &&
           cat -n wkhtmltopdf/qt/src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h
       # - name: build
