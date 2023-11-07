@@ -42,9 +42,10 @@ jobs:
           ref: 0.12.2.1
       - name: patches
         run: >
+          cd wkhtmltopdf/qt
           ls -la ../../packaging/patches &&
           git apply ../../packaging/patches/build_arm64.patch &&
-          cat -n wkhtmltopdf/qt/src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h
+          cat -n src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h
       # - name: build
       #   run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
       # - uses: softprops/action-gh-release@v0.1.14
