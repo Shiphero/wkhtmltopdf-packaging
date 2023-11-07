@@ -1,5 +1,6 @@
 name: release
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       wkhtmltopdf_ref:
@@ -19,30 +20,8 @@ jobs:
     strategy:
       matrix:
         package_target:
-          - almalinux8-aarch64
-          - almalinux8-ppc64le
-          - almalinux8-x86_64
-          - almalinux9-aarch64
-          - almalinux9-ppc64le
-          - almalinux9-x86_64
-          - bionic-ppc64el
-          - bookworm-amd64
-          - bookworm-arm64
-          - bookworm-i386
-          - bookworm-ppc64el
-          - buster-ppc64el
-          - bullseye-amd64
-          - bullseye-arm64
-          - bullseye-i386
-          - bullseye-ppc64el
-          - fedora37-aarch64
-          - fedora37-x86_64
-          - focal-ppc64el
-          - jammy-amd64
-          - jammy-arm64
-          - jammy-ppc64el
-          - raspberrypi.bookworm-armhf
-          - raspberrypi.bullseye-armhf
+          - centos7-aarch64
+          - centos7-x86_64
       fail-fast: false
     steps:
       - name: configure docker
@@ -59,15 +38,24 @@ jobs:
           repository: wkhtmltopdf/wkhtmltopdf
           path: wkhtmltopdf
           submodules: true
-          ref: ${{ github.event.inputs.wkhtmltopdf_ref }}
+          # ref: ${{ github.event.inputs.wkhtmltopdf_ref }}
+          ref: 0.12.2.1
+      - name: patches
+        run: >
+          cd wkhtmltopdf/qt &&
+          git apply ../../packaging/patches/build_arm64.patch && 
+          cd ../../
       - name: build
-        run: cd packaging && python3 ./build package-docker --clean --iteration ${{ github.event.inputs.packaging_iteration }} ${{ matrix.package_target }} ../wkhtmltopdf
+        run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
       - uses: softprops/action-gh-release@v0.1.14
         with:
-          name: ${{ github.event.inputs.packaging_release }}
-          tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
+          # name: ${{ github.event.inputs.packaging_release }}
+          # tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
+          name: 0.12.2.1
+          tag_name: 0.12.2.1-1
           target_commitish: ${{ github.sha }}
           files: "packaging/targets/wkhtmltox*.*"
           fail_on_unmatched_files: false
           draft: true
-          body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
+          # body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
+          body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/0.12.2.1).
