@@ -43,20 +43,19 @@ jobs:
       - name: patches
         run: >
           cd wkhtmltopdf/qt &&
-          ls -la ../../packaging/patches &&
-          git apply ../../packaging/patches/build_arm64.patch &&
-          cat -n src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h
-      # - name: build
-      #   run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
-      # - uses: softprops/action-gh-release@v0.1.14
-      #   with:
-      #     # name: ${{ github.event.inputs.packaging_release }}
-      #     # tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
-      #     name: 0.12.2.1
-      #     tag_name: 0.12.2.1-1
-      #     target_commitish: ${{ github.sha }}
-      #     files: "packaging/targets/wkhtmltox*.*"
-      #     fail_on_unmatched_files: false
-      #     draft: true
-      #     # body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
-      #     body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/0.12.2.1).
+          git apply ../../packaging/patches/build_arm64.patch && 
+          cd ../../
+      - name: build
+        run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
+      - uses: softprops/action-gh-release@v0.1.14
+        with:
+          # name: ${{ github.event.inputs.packaging_release }}
+          # tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
+          name: 0.12.2.1
+          tag_name: 0.12.2.1-1
+          target_commitish: ${{ github.sha }}
+          files: "packaging/targets/wkhtmltox*.*"
+          fail_on_unmatched_files: false
+          draft: true
+          # body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
+          body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/0.12.2.1).
