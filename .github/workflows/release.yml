@@ -47,7 +47,7 @@ jobs:
           cd wkhtmltopdf/qt &&
           ls -la &&
           cat ../../packaging/patches/build_arm64.patch &&
-          git apply ../../packaging/patches/build_arm64.patch wkhtmltopdf/qt &&
+          git apply ../../packaging/patches/build_arm64.patch &&
           cat -n wkhtmltopdf/qt/src/3rdparty/webkit/Source/JavaScriptCore/wtf/Platform.h
       # - name: build
       #   run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
