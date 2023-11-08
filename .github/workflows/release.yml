@@ -1,6 +1,5 @@
 name: release
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       wkhtmltopdf_ref:
@@ -38,8 +37,7 @@ jobs:
           repository: wkhtmltopdf/wkhtmltopdf
           path: wkhtmltopdf
           submodules: true
-          # ref: ${{ github.event.inputs.wkhtmltopdf_ref }}
-          ref: 0.12.2.1
+          ref: ${{ github.event.inputs.wkhtmltopdf_ref }}
       - name: patches
         run: >
           cd wkhtmltopdf/qt &&
@@ -49,13 +47,10 @@ jobs:
         run: cd packaging && python3 ./build package-docker --clean --iteration 1 ${{ matrix.package_target }} ../wkhtmltopdf
       - uses: softprops/action-gh-release@v0.1.14
         with:
-          # name: ${{ github.event.inputs.packaging_release }}
-          # tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
-          name: 0.12.2.1
-          tag_name: 0.12.2.1-1
+          name: ${{ github.event.inputs.packaging_release }}
+          tag_name: ${{ github.event.inputs.packaging_release }}-${{ github.event.inputs.packaging_iteration }}
           target_commitish: ${{ github.sha }}
           files: "packaging/targets/wkhtmltox*.*"
           fail_on_unmatched_files: false
           draft: true
-          # body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
-          body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/0.12.2.1).
+          body: All packages were built and uploaded automatically as a part of [this run](${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}), using this [wkhtmltopdf branch/tag](https://github.com/wkhtmltopdf/wkhtmltopdf/tree/${{ github.event.inputs.wkhtmltopdf_ref }}).
