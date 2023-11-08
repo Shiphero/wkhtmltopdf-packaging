@@ -15,12 +15,14 @@ on:
 
 jobs:
   docker:
-    runs-on: ubuntu-20.04
+    runs-on: MEGATRON-Runner0
     strategy:
       matrix:
         package_target:
           - centos7-aarch64
           - centos7-x86_64
+          - buster-arm64
+          - buster-x86_64
       fail-fast: false
     steps:
       - name: configure docker
